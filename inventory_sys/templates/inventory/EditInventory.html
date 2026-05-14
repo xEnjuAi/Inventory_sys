@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-2">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Inventory: {{ inventory_item.name }}</h2>
+
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="p-4 mb-2 text-sm text-red-800 rounded-lg bg-red-50">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'edit_inventory' inventory_item.inventory_id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="mb-6 flex items-center gap-4">
+            {% if inventory_item.image %}
+                <img src="{{ inventory_item.image.url }}" class="w-16 h-16 rounded-full object-cover border border-gray-200" alt="Current Image">
+            {% else %}
+                <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">N/A</div>
+            {% endif %}
+            <div class="w-full">
+                <label class="block mb-2 text-sm font-medium text-gray-900">Item Picture(Optional)</label>
+                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" type="file" name="image" accept="image/*">
+            </div>
+        </div>
+
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Item Name</label>
+                <input type="text" name="name" value="{{ inventory_item.name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+            </div>
+             <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Brand</label>
+                <select name="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+                    {% for brand in brands %}
+                        <option value="{{ brand.brand_id }}" {% if inventory_item.brand_id == brand.brand_id %}selected{% endif %}>{{ brand.brand }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Item Type</label>
+                <select name="item_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+                    {% for item_type in item_types %}
+                        <option value="{{ item_type.item_type_id }}" {% if inventory_item.item_type_id == item_type.item_type_id %}selected{% endif %}>{{ item_type.item_type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Shipper</label>
+                <input type="text" name="shipper" value="{{ inventory_item.shipper }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Recieved Date</label>
+                <input type="date" name="recieved_date" value="{{ inventory_item.recieved_date|date:'Y-m-d' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Stocks</label>
+                <input type="text" name="stocks" value="{{ inventory_item.stocks }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+
+        <div class="flex justify-end gap-2 mt-4">
+            <a href="{% url 'user_list' %}" class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-6 py-2.5">Cancel</a>
+            <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-6 py-2.5">Update Inventory</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

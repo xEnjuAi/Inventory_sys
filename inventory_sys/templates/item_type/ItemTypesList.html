@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+  <h2 class="text-2xl font-bold text-gray-900">Item Types List</h2>
+  <a href="{% url 'add_item_type' %}"
+     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+    Add Item Type
+  </a>
+</div>
+
+{% if messages %}
+<div class="mb-4">
+  {% for message in messages %}
+  <div class="p-4 mb-2 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <table class="w-full text-sm text-left text-gray-500">
+    <thead class="text-xs text-white uppercase bg-blue-600">
+      <tr>
+        <th scope="col" class="px-6 py-3">ID</th>
+        <th scope="col" class="px-6 py-3">Item Type</th>
+        <th scope="col" class="px-6 py-3">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item_type in item_types %}
+      <tr class="bg-white border-b hover:bg-gray-50">
+        <td class="px-6 py-4 font-medium text-gray-900">
+          {{ item_type.pk|default:"—" }}
+        </td>
+        <td class="px-6 py-4">{{ item_type.item_type|default:"No name" }}</td>
+        <td class="px-6 py-4">
+          {% if item_type.pk %}
+            <a href="{% url 'edit_item_type' item_type.pk %}" 
+               class="font-medium text-blue-600 hover:underline">Edit</a>
+            |
+            <a href="{% url 'delete_item_type' item_type.pk %}" 
+               class="font-medium text-red-600 hover:underline">Delete</a>
+          {% else %}
+            <span class="text-gray-400">No ID</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" class="px-6 py-4 text-center text-gray-500 py-8">
+          No item types. <a href="{% url 'add_item_type' %}">Add one →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

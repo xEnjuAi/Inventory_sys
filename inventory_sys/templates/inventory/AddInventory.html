@@ -1,0 +1,167 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="max-w-4xl bg-white p-8 rounded-lg mt-2 shadow-md">
+
+  <form
+    method="POST"
+    action="{% url 'add_inventory' %}"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+
+    <div class="mb-6 flex items-center gap-4">
+      <div
+        class="w-16 h-16 bg-gray-200 flex items-center justify-center text-gray-500 overflow-hidden border border-gray-300 shrink-0 margin-30"
+      >
+        <span id="previewText" class="text-xs font-medium">Item Picture</span>
+        <img
+          id="profilePreview"
+          class="w-full h-full object-cover hidden"
+          alt="Preview"
+        />
+      </div>
+
+      <div class="w-full">
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Item Picture</label
+        >
+        <input
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+          type="file"
+          name="image"
+          accept="image/*"
+          onchange="previewImage(event)"
+        />
+      </div>
+    </div>
+
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Item Name</label
+        >
+        <input
+          type="text"
+          name="item_name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="John Wick"
+          required
+        />
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Item Type</label
+        >
+        <select
+          name="item_type"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          required
+        >
+          <option value="">Select Item Type</option>
+          {% for item_type in item_types %}
+          <option value="{{ item_type.item_type_id }}">{{ item_type.item_type }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <!--Break-->
+       <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Brand</label
+        >
+        <select
+          name="brand"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          required
+        >
+          <option value="">Select Brand</option>
+          {% for brand in brands %}
+          <option value="{{ brand.brand_id }}">{{ brand.brand }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Shipper</label
+        >
+        <input
+          type="text"
+          name="shipper"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder=""
+          required
+        />
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Recieved date</label
+        >
+        <input
+          type="date"
+          name="recieved_date"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900"
+          >Stocks</label
+        >
+        <input
+          type="text"
+          name="stocks"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="0"
+          pattern="[0-9]+"
+          title="Please enter a valid number"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button
+        type="submit"
+          title="Must be an 11-digit PH number starting with 09"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button
+        type="submit"
+        class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"
+      >
+        Save User
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+
+  function previewImage(event) {
+    const input = event.target;
+    const previewImg = document.getElementById("profilePreview");
+    const previewText = document.getElementById("previewText");
+
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        previewImg.src = e.target.result;
+        previewImg.classList.remove("hidden");
+        previewText.classList.add("hidden");
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      previewImg.src = "";
+      previewImg.classList.add("hidden");
+      previewText.classList.remove("hidden");
+    }
+  }
+</script>
+{% endblock %}
